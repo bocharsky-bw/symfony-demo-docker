@@ -1,0 +1,28 @@
+nginx:
+    #image: nginx:latest
+    build: ./docker/nginx/
+    ports:
+        - "127.168.66.66:80:80"
+        - "127.168.66.66:443:443"
+    volumes_from:
+        - fpm
+    links:
+        - fpm
+fpm:
+    #image: php:fpm
+    build: ./docker/php-fpm/
+    ports:
+        - "127.168.66.66:9000:9000"
+    volumes:
+        - ./application/:/var/www/html/
+    links:
+        - mysql
+mysql:
+    image: mysql:latest
+    ports:
+        - "127.168.66.66:3306:3306"
+    environment:
+        MYSQL_DATABASE: symfony
+        MYSQL_USER: symfony
+        MYSQL_PASSWORD: symfony
+        MYSQL_ROOT_PASSWORD: admin
