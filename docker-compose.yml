@@ -1,3 +1,12 @@
+fpm:
+    #image: php:fpm
+    build: ./docker/php-fpm/
+    ports:
+        - "127.168.66.66:9000:9000"
+    volumes:
+        - ./application/:/var/www/html/
+    links:
+        - mysql
 nginx:
     #image: nginx:latest
     build: ./docker/nginx/
@@ -8,15 +17,6 @@ nginx:
         - fpm
     links:
         - fpm
-fpm:
-    #image: php:fpm
-    build: ./docker/php-fpm/
-    ports:
-        - "127.168.66.66:9000:9000"
-    volumes:
-        - ./application/:/var/www/html/
-    links:
-        - mysql
 mysql:
     image: mysql:latest
     ports:
