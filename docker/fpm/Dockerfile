@@ -1,17 +1,18 @@
 FROM php:fpm
 MAINTAINER Victor Bocharsky <bocharsky.bw@gmail.com>
 
-# PHP config
+# Add PHP config
 ADD ./php.ini /usr/local/etc/php/
 
 # Install modules
 RUN apt-get update \
     && apt-get install -y \
-        php5-xdebug \
-        php5-intl \
+        libicu-dev \
     && docker-php-ext-install \
-        pdo_mysql \
+        intl \
         mbstring \
-        opcache
+        opcache \
+        pdo_mysql \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 CMD ["php-fpm"]
