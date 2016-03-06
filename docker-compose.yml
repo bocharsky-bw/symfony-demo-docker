@@ -2,7 +2,7 @@ app:
     image: busybox:latest
     #build: ./docker/app/
     volumes:
-        - /srv/docker/symfony-demo:/srv
+        - /var/www/html:/srv
     #command: tail -f /dev/null # or
     tty: true
 
