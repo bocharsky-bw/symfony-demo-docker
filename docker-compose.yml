@@ -3,6 +3,7 @@ app:
     #build: ./docker/app/
     volumes:
         - /var/www/html:/srv
+    working_dir: /srv
     #command: tail -f /dev/null # or
     tty: true
 
@@ -16,6 +17,7 @@ mysql:
 fpm:
     #image: php:fpm
     build: ./docker/fpm/
+    working_dir: /srv
     volumes_from:
         - app
     links:
@@ -26,6 +28,7 @@ fpm:
 nginx:
     #image: nginx:latest
     build: ./docker/nginx/
+    working_dir: /srv
     volumes_from:
         - app
     links:
