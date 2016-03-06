@@ -1,28 +1,35 @@
+app:
+    image: busybox:latest
+    #build: ./docker/app/
+    volumes:
+        - /srv/docker/symfony-demo:/srv
+    #command: tail -f /dev/null # or
+    tty: true
+
+mysql:
+    image: mysql:latest
+    environment:
+        MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    ports:
+        - '3306:3306'
+
 fpm:
     #image: php:fpm
-    build: ./docker/php-fpm/
-    ports:
-        - "127.168.66.66:9000:9000"
-    volumes:
-        - ./application/:/var/www/html/
+    build: ./docker/fpm/
+    volumes_from:
+        - app
     links:
         - mysql
+    ports:
+        - '9000:9000'
+
 nginx:
     #image: nginx:latest
     build: ./docker/nginx/
-    ports:
-        - "127.168.66.66:80:80"
-        - "127.168.66.66:443:443"
     volumes_from:
-        - fpm
+        - app
     links:
         - fpm
-mysql:
-    image: mysql:latest
     ports:
-        - "127.168.66.66:3306:3306"
-    environment:
-        MYSQL_DATABASE: symfony
-        MYSQL_USER: symfony
-        MYSQL_PASSWORD: symfony
-        MYSQL_ROOT_PASSWORD: admin
+        - '80:80'
+        - '443:443'
