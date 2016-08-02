@@ -1,38 +1,40 @@
-app:
-    image: busybox:latest
-    #build: ./docker/app/
-    volumes:
-        - /var/www/html:/srv
-    working_dir: /srv
-    #command: tail -f /dev/null # or
-    tty: true
+version: '2'
+services:
+    app:
+        image: busybox:latest
+        #build: ./docker/app
+        volumes:
+            - /var/www/symfony:/srv
+        working_dir: /srv
+        #command: tail -f /dev/null # or
+        tty: true
 
-mysql:
-    image: mysql:latest
-    environment:
-        MYSQL_ALLOW_EMPTY_PASSWORD: yes
-    ports:
-        - '3306:3306'
+    mysql:
+        image: mysql:latest
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        ports:
+            - '3306:3306'
 
-fpm:
-    #image: php:fpm
-    build: ./docker/fpm/
-    working_dir: /srv
-    volumes_from:
-        - app
-    links:
-        - mysql
-    ports:
-        - '9000:9000'
+    fpm:
+        #image: php:fpm
+        build: ./docker/fpm
+        working_dir: /srv
+        volumes_from:
+            - app
+        links:
+            - mysql
+        ports:
+            - '9000:9000'
 
-nginx:
-    #image: nginx:latest
-    build: ./docker/nginx/
-    working_dir: /srv
-    volumes_from:
-        - app
-    links:
-        - fpm
-    ports:
-        - '80:80'
-        - '443:443'
+    nginx:
+        #image: nginx:latest
+        build: ./docker/nginx
+        working_dir: /srv
+        volumes_from:
+            - app
+        links:
+            - fpm
+        ports:
+            - '80:80'
+            - '443:443'
